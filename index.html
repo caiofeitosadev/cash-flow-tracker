@@ -40,20 +40,22 @@
 
     <section class="registros">
       <h2>Registros</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Descrição</th>
-            <th>Valor</th>
-            <th>Data</th>
-            <th>Tipo</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="tabela-registros">
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+              <th>Data</th>
+              <th>Tipo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-registros">
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <div id="modal-wrapper">
@@ -71,10 +73,10 @@
 
           <div class="opcoes-tipo">
             <label>
-              <input type="radio" name="tipo" value="entrada" checked> Entrada
+              <input type="radio" name="tipo" value="entrada" id="tipo-entrada" checked> Entrada
             </label>
             <label>
-              <input type="radio" name="tipo" value="saida"> Saída
+              <input type="radio" name="tipo" id="tipo-saida" value="saida"> Saída
             </label>
           </div>
           <div id="botoes-form">
