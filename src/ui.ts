@@ -62,8 +62,6 @@ export function renderizarTabela(table: HTMLTableElement | null) {
 }
 export function editarRegistro() {
   const table = document.querySelector('table');
-  const radioEntrada = document.getElementById('tipo-entrada') as HTMLInputElement;
-  const radioSaida = document.getElementById('tipo-saida') as HTMLInputElement;
   if(table) {
     table.addEventListener('click', (event) => {
       const target = <HTMLElement>event.target;
@@ -71,7 +69,6 @@ export function editarRegistro() {
         const id = target.getAttribute('data-id');
         if(id) {
           setRegistroIdParaEditar(id);
-          
           const registroEditar = registros.find((registro) => registro.id === id);
           if(registroEditar) {
             const descricaoInput = document.querySelector('#descricao') as HTMLInputElement;
@@ -82,13 +79,7 @@ export function editarRegistro() {
               descricaoInput.value = registroEditar.descricao;
               valorInput.value = registroEditar.valor.toString();
               dataInput.value = registroEditar.data;
-              if(registroEditar.tipo === 'entrada') {
-                radioEntrada.checked = true;
-                setTipoTransacao('entrada');
-              } else {
-                radioSaida.checked = true;
-                setTipoTransacao('saida');
-              }
+              setTipoTransacao(registroEditar.tipo);
               openModal();
             }
           }

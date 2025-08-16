@@ -15,20 +15,29 @@ export const valorSaidas = document.getElementById('valor-saidas');
 export const saldoFinal = document.getElementById('saldo-final');
 const submit = document.getElementById('form-registro');
 const btnEntrada = document.getElementById('tipo-entrada') as HTMLInputElement;
-const btnSaida = document.getElementById('tipo-saida')  as HTMLInputElement;
+const btnSaida = document.getElementById('tipo-saida') as HTMLInputElement;
 const btnFechar = document.getElementById('btn-fechar-modal');
+const registrarEntrada = document.getElementById('btn-entrada');
+const registrarSaida = document.getElementById('btn-saida');
 
 
 let tipoTransacao: 'entrada' | 'saida' = 'entrada';
 export function setTipoTransacao(tipo: 'entrada' | 'saida') {
     tipoTransacao = tipo;
+  const radioEntrada = document.getElementById('tipo-entrada') as HTMLInputElement;
+  const radioSaida = document.getElementById('tipo-saida') as HTMLInputElement;
+  if(tipo === 'entrada') {
+    radioEntrada.checked = true;
+  } else {
+    radioSaida.checked = true;
+  }
 }
 function onSubmit(event: Event) {
     event.preventDefault();
     const id = getRegistroIdParaEditar();
-    const valueDescription = (description as HTMLInputElement)?.value;
-    const valor = Number((value as HTMLInputElement)?.value);
-    const date = (data as HTMLInputElement)?.value;
+    const valueDescription = description?.value;
+    const valor = Number(value.value);
+    const date = data.value;
     if (id !== null) {
         const index = registros.findIndex((registro) => registro.id === id);
         if (index !== -1 && valueDescription && valor && date) {
@@ -38,7 +47,6 @@ function onSubmit(event: Event) {
           registros[index]!.tipo = tipoTransacao;
           localStorage.setItem('registros', JSON.stringify(registros));
         }
-        
         setRegistroIdParaEditar(null);
     } else {
         if (valueDescription && valor && date) {
@@ -77,5 +85,12 @@ btnSaida?.addEventListener('click', () => {
 });
 submit?.addEventListener('submit', onSubmit);
 btnFechar?.addEventListener('click', closeModal);
-
+registrarEntrada?.addEventListener('click', () => {
+  setTipoTransacao('entrada');
+  openModal();
+})
+registrarSaida?.addEventListener('click', () => {
+  setTipoTransacao('saida');
+  openModal();
+})
 init();
