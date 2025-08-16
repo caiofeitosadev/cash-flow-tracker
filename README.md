@@ -38,4 +38,4 @@ Para rodar este projeto localmente, siga os passos abaixo:
 
 ### .gitignore
 
-Este arquivo instrui o Git a ignorar arquivos e pastas que não devem ser incluídos no repositório. Crie um arquivo chamado `.gitignore` na raiz do seu projeto e adicione o seguinte conteúdo:
+Este arquivo instrui o Git a ignorar arquivos e pastas que não devem ser incluídos no repositório.
