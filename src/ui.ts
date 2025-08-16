@@ -3,6 +3,15 @@ import  formatDate  from "./formatDate.js";
 import { openModal } from "./modal.js";
 import { saldoFinal, totalRegistro, valorEntradas, valorSaidas } from "./script.js";
 
+let registroIdParaEditar: string | null = null;
+export function setRegistroIdParaEditar(id: string | null) {
+    registroIdParaEditar = id;
+}
+export function getRegistroIdParaEditar() {
+  return registroIdParaEditar;
+}
+const btnEditar = document.querySelector('.btn-editar');
+
 export function atualizarTotal(totalRegistro: HTMLElement | null,
     valorEntradas: HTMLElement | null,
     valorSaidas: HTMLElement | null,
@@ -53,29 +62,34 @@ export function renderizarTabela(table: HTMLTableElement | null) {
   }
 }
 export function editarRegistro() {
-  const table = document.querySelector('table');
-  if(table) {
-    table.addEventListener('click', (event) => {
-      const target = <HTMLElement>event.target;
-      if(target.classList.contains('btn-editar')) {
-        const id = target.getAttribute('data-id')
-        if(id) {
-          const registroEditar = registros.find((registro) => registro.id === id);
-          if(registroEditar) {
-            const descricaoInput = document.getElementById('descricao') as HTMLInputElement;
-            const valorInput = document.getElementById('valor') as HTMLInputElement;
-            const dataInput = document.getElementById('data') as HTMLInputElement;
-            if(descricaoInput && valorInput && dataInput) {
-              descricaoInput.value = registroEditar.descricao;
-              valorInput.value = registroEditar.valor.toString();
-              dataInput.value = registroEditar.data;
-              openModal();
-            }
-          }
-        }
-      }
-    })
-  }
+  const table = document.querySelector('table');
+
+  if(table) {
+    table.addEventListener('click', (event) => {
+      const target = <HTMLElement>event.target;
+      if(target.classList.contains('btn-editar')) {
+        const id = target.getAttribute('data-id');
+        if(id) {
+          setRegistroIdParaEditar(id);
+console.log("DEBUG - setando ID para edição:", id);
+          
+          const registroEditar = registros.find((registro) => registro.id === id);
+          if(registroEditar) {
+            const descricaoInput = document.querySelector('#descricao') as HTMLInputElement;
+            const valorInput = document.querySelector('#valor') as HTMLInputElement;
+            const dataInput = document.querySelector('#data') as HTMLInputElement;
+
+            if(descricaoInput && valorInput && dataInput) {
+              descricaoInput.value = registroEditar.descricao;
+              valorInput.value = registroEditar.valor.toString();
+              dataInput.value = registroEditar.data;
+              openModal();
+            }
+          }
+        }
+      }
+    });
+  }
 }
 export function removerRegistro() {
   const table = document.querySelector('table');
@@ -102,3 +116,6 @@ function showNotification(mensagem: string) {
     }, 3000)
   }
 }
+btnEditar?.addEventListener('click', () => {
+  editarRegistro();
+})

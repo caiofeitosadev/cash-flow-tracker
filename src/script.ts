@@ -1,11 +1,13 @@
 import { openModal, closeModal } from "./modal.js";
 import type { Registro } from "./data.js";
+import { registros } from "./data.js";
+import { getRegistroIdParaEditar } from "./ui.js";
 import { addRegister, loadRegister } from "./data.js";
-import { atualizarTotal, editarRegistro, removerRegistro, renderizarTabela } from "./ui.js";
+import { atualizarTotal, editarRegistro, removerRegistro, renderizarTabela, setRegistroIdParaEditar } from "./ui.js";
 
-const description = document.getElementById('descricao');
-const value = document.getElementById('valor');
-const data = document.getElementById('data');
+const description = document.getElementById('descricao') as HTMLInputElement;
+const value = document.getElementById('valor') as HTMLInputElement;
+const data = document.getElementById('data') as HTMLInputElement;
 const table = document.getElementById('tabela-registros') as HTMLTableElement;
 export const totalRegistro = document.getElementById('total-registros');
 export const valorEntradas = document.getElementById('valor-entradas');
@@ -15,34 +17,46 @@ const submit = document.getElementById('form-registro');
 const btnEntrada = document.getElementById('btn-entrada');
 const btnSaida = document.getElementById('btn-saida');
 const btnFechar = document.getElementById('btn-fechar-modal');
+const btnEditar = document.querySelector('.btn-editar');
 
 let tipoTransacao: 'entrada' | 'saida' = 'entrada';
 
 function onSubmit(event: Event) {
-  event.preventDefault();
-  if (
-        description instanceof HTMLInputElement &&
-        value instanceof HTMLInputElement &&
-        data instanceof HTMLInputElement
-    ) {
-        const valueDescription = description.value;
-        const valor = Number(value.value);
-        const date = data.value;
+    event.preventDefault();
+    console.log("DEBUG - registroIdParaEditar:", getRegistroIdParaEditar());
+    const id = getRegistroIdParaEditar();
+    const valueDescription = (description as HTMLInputElement)?.value;
+    const valor = Number((value as HTMLInputElement)?.value);
+    const date = (data as HTMLInputElement)?.value;
 
-        const newObject: Registro = {
-            id: Date.now().toString(),
-            descricao: valueDescription,
-            valor: valor,
-            data: date,
-            tipo: tipoTransacao,
-        };
-        addRegister(newObject);
-        renderizarTabela(table);
-        atualizarTotal(totalRegistro, valorEntradas, valorSaidas, saldoFinal);
-        closeModal();
+    if (id !== null) {
+        const index = registros.findIndex((registro) => registro.id === id);
+        if (index !== -1 && valueDescription && valor && date) {
+          registros[index]!.descricao = valueDescription;
+          registros[index]!.valor = valor;
+          registros[index]!.data = date;
+          localStorage.setItem('registros', JSON.stringify(registros));
+        }
+        
+        setRegistroIdParaEditar(null);
+    } else {
+        if (valueDescription && valor && date) {
+            const newObject: Registro = {
+                id: Date.now().toString(),
+                descricao: valueDescription,
+                valor: valor,
+                data: date,
+                tipo: tipoTransacao,
+            };
+            addRegister(newObject);
+        }
     }
 
+    renderizarTabela(table);
+    atualizarTotal(totalRegistro, valorEntradas, valorSaidas, saldoFinal);
+    closeModal();
 }
+
 
 function init() {
   loadRegister();
@@ -60,6 +74,9 @@ btnSaida?.addEventListener('click', () => {
   tipoTransacao = 'saida';
   openModal();
 });
+btnEditar?.addEventListener('click', () => {
+  editarRegistro();
+})
 submit?.addEventListener('submit', onSubmit);
 btnFechar?.addEventListener('click', closeModal);
 
