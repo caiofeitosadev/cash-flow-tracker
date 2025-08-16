@@ -1,4 +1,4 @@
-export function formatDate(data: string): string {
+export default function formatDate(data: string): string {
   const [ano, mes, dia] = data.split('-');
   return `${dia}/${mes}/${ano}`;
 }

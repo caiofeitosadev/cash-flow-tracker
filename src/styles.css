@@ -12,7 +12,6 @@ h1 {
   text-align: center;
 }
 
-/* ⚠️ Correção: 'main' no lugar de '#container-main' */
 main {
   padding: 2rem;
 }
@@ -27,7 +26,7 @@ main .totalizadores {
 main .totalizadores .totalizador {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start; /* Use 'flex-start' */
+  justify-content: flex-start; 
   align-items: center;
   gap: 4px;
 }
@@ -82,11 +81,11 @@ main .acoes #btn-saida:hover {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px); /* Starts 20px below its final position */
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0); /* Ends at its final position */
+    transform: translateY(0); 
   }
 }
 
@@ -140,7 +139,7 @@ main .acoes #btn-saida:hover {
   border: solid 1px greenyellow;
   background-color: greenyellow;
 }
-/* Seção principal da tabela */
+
 .registros {
   margin-top: 2rem;
 }
@@ -192,17 +191,32 @@ tbody tr:nth-child(even) {
   color: #721c24;
 }
 
+.btn-editar, .btn-excluir {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.btn-editar {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-editar:hover {
+    background-color: #0056b3;
+}
+
 .btn-excluir {
-  background-color: #dc3545;
-  color: #fff;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
-  cursor: pointer;
+    background-color: #dc3545;
+    color: white;
 }
 
 .btn-excluir:hover {
-  background-color: #c82333;
+    background-color: #c82333;
 }
 
 .notificacao {

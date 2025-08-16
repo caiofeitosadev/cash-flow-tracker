@@ -1,7 +1,7 @@
 import { openModal, closeModal } from "./modal.js";
 import type { Registro } from "./data.js";
-import { addRegister, loadRegister, removerRegistroPorId } from "./data.js";
-import { atualizarTotal, removerRegistro, renderizarTabela } from "./ui.js";
+import { addRegister, loadRegister } from "./data.js";
+import { atualizarTotal, editarRegistro, removerRegistro, renderizarTabela } from "./ui.js";
 
 const description = document.getElementById('descricao');
 const value = document.getElementById('valor');
@@ -49,6 +49,7 @@ function init() {
   renderizarTabela(table);
   atualizarTotal(totalRegistro, valorEntradas, valorSaidas, saldoFinal);
   removerRegistro();
+  editarRegistro();
 }
 
 btnEntrada?.addEventListener('click', () => {

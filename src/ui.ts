@@ -1,5 +1,6 @@
 import { registros, removerRegistroPorId } from "./data.js";
-import { formatDate } from "./formatDate.js";
+import  formatDate  from "./formatDate.js";
+import { openModal } from "./modal.js";
 import { saldoFinal, totalRegistro, valorEntradas, valorSaidas } from "./script.js";
 
 export function atualizarTotal(totalRegistro: HTMLElement | null,
@@ -43,11 +44,37 @@ export function renderizarTabela(table: HTMLTableElement | null) {
           </td>
           <td>
             <button class="btn-excluir" data-id="${registro.id}">Excluir</button>
+            <button class="btn-editar" data-id="${registro.id}">Editar</button>
           </td>
         </tr>
       `;
     });
     table.innerHTML = tabela;
+  }
+}
+export function editarRegistro() {
+  const table = document.querySelector('table');
+  if(table) {
+    table.addEventListener('click', (event) => {
+      const target = <HTMLElement>event.target;
+      if(target.classList.contains('btn-editar')) {
+        const id = target.getAttribute('data-id')
+        if(id) {
+          const registroEditar = registros.find((registro) => registro.id === id);
+          if(registroEditar) {
+            const descricaoInput = document.getElementById('descricao') as HTMLInputElement;
+            const valorInput = document.getElementById('valor') as HTMLInputElement;
+            const dataInput = document.getElementById('data') as HTMLInputElement;
+            if(descricaoInput && valorInput && dataInput) {
+              descricaoInput.value = registroEditar.descricao;
+              valorInput.value = registroEditar.valor.toString();
+              dataInput.value = registroEditar.data;
+              openModal();
+            }
+          }
+        }
+      }
+    })
   }
 }
 export function removerRegistro() {
