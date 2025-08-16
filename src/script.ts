@@ -20,20 +20,28 @@ let tipoTransacao: 'entrada' | 'saida' = 'entrada';
 
 function onSubmit(event: Event) {
   event.preventDefault();
-  const valueDescription = (description as HTMLInputElement)?.value;
-  const valor = Number((value as HTMLInputElement)?.value);
-  const date = (data as HTMLInputElement)?.value;
-  const newObject: Registro = {
-    id: Date.now().toString(),
-    descricao: valueDescription,
-    valor: valor,
-    data: date,
-    tipo: tipoTransacao,
-  };
-  addRegister(newObject);
-  renderizarTabela(table);
-  atualizarTotal(totalRegistro, valorEntradas, valorSaidas, saldoFinal);
-  closeModal();
+  if (
+        description instanceof HTMLInputElement &&
+        value instanceof HTMLInputElement &&
+        data instanceof HTMLInputElement
+    ) {
+        const valueDescription = description.value;
+        const valor = Number(value.value);
+        const date = data.value;
+
+        const newObject: Registro = {
+            id: Date.now().toString(),
+            descricao: valueDescription,
+            valor: valor,
+            data: date,
+            tipo: tipoTransacao,
+        };
+        addRegister(newObject);
+        renderizarTabela(table);
+        atualizarTotal(totalRegistro, valorEntradas, valorSaidas, saldoFinal);
+        closeModal();
+    }
+
 }
 
 function init() {
