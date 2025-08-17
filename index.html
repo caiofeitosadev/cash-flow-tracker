@@ -13,6 +13,16 @@
     <h1>Cash Flow Tracker</h1>
   </header>
   <div id="notificacao" class="notificacao"></div>
+  <div class="modal-backdrop" id="delete-modal">
+    <div class="modal-content">
+      <h4>Confirmar Exclusão</h4>
+      <p>Você tem certeza que deseja excluir este registro?</p>
+      <div class="modal-actions">
+        <button id="cancel-delete" class="btn">Cancelar</button>
+        <button id="confirm-delete" class="btn btn-danger">Excluir</button>
+      </div>
+    </div>
+  </div>
   <main id="container-main">
     <section class="totalizadores">
       <div class="totalizador total-registros">
@@ -44,9 +54,17 @@
         <input type="text" id="search-input" placeholder="Buscar por descrição">
       </div>
       <div class="filter-container">
-        <button id="filter-all" class="filter-btn active">Todos</button>
-        <button id="filter-entrada" class="filter-btn">Entradas</button>
-        <button id="filter-saida" class="filter-btn">Saídas</button>
+        <div class="btn-actions">
+          <button id="filter-all" class="filter-btn active">Todos</button>
+          <button id="filter-entrada" class="filter-btn">Entradas</button>
+          <button id="filter-saida" class="filter-btn">Saídas</button>
+        </div>
+        <div class="filter-date-container">
+          <label for="start-date">De:</label>
+          <input type="date" id="start-date">
+          <label for="end-date">Até:</label>
+          <input type="date" id="end-date">
+        </div>
       </div>
       <div class="table-responsive">
         <table>

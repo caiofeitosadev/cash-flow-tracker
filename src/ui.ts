@@ -10,6 +10,7 @@ import {
 } from './script.js';
 
 let registroIdParaEditar: string | null = null;
+export let registroIdParaDeletar: string | null = null;
 export function setRegistroIdParaEditar(id: string | null) {
   registroIdParaEditar = id;
 }
@@ -125,16 +126,15 @@ export function editarRegistro() {
   }
 }
 export function removerRegistro() {
+  const modalDelete = document.getElementById('delete-modal');
   const table = document.querySelector('table');
   table?.addEventListener('click', (event) => {
     const target = <HTMLElement>event.target;
     if (target.classList.contains('btn-excluir')) {
       const id = target.getAttribute('data-id');
       if (id) {
-        removerRegistroPorId(id);
-        renderizarTabela(table, registros);
-        atualizarTotal(totalRegistro, valorEntradas, valorSaidas, saldoFinal);
-        showNotification('O registro foi excluído com sucesso!', 'success');
+        modalDelete?.classList.add('active');
+        registroIdParaDeletar = id;
       }
     }
   });

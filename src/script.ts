@@ -1,6 +1,11 @@
 import { openModal, closeModal } from './modal.js';
 import type { Registro } from './data.js';
-import { addRegister, loadRegister, registros } from './data.js';
+import {
+  addRegister,
+  loadRegister,
+  registros,
+  removerRegistroPorId,
+} from './data.js';
 import {
   atualizarTotal,
   editarRegistro,
@@ -8,9 +13,9 @@ import {
   renderizarTabela,
   setRegistroIdParaEditar,
   getRegistroIdParaEditar,
+  registroIdParaDeletar,
   showNotification,
 } from './ui.js';
-
 let activeFilter: 'todos' | 'entrada' | 'saida' = 'todos';
 let tipoTransacao: 'entrada' | 'saida' = 'entrada';
 export const totalRegistro = document.getElementById('total-registros');
@@ -21,6 +26,7 @@ const description = document.getElementById('descricao') as HTMLInputElement;
 const value = document.getElementById('valor') as HTMLInputElement;
 const data = document.getElementById('data') as HTMLInputElement;
 const table = document.getElementById('tabela-registros') as HTMLTableElement;
+const modal = document.getElementById('modal-wrapper') as HTMLElement;
 const submit = document.getElementById('form-registro');
 const btnEntrada = document.getElementById('tipo-entrada') as HTMLInputElement;
 const btnSaida = document.getElementById('tipo-saida') as HTMLInputElement;
@@ -38,6 +44,17 @@ const btnFilterSaida = document.getElementById(
 const filterContainer = document.querySelector(
   '.filter-container',
 ) as HTMLElement;
+const startDateInput = document.getElementById(
+  'start-date',
+) as HTMLInputElement;
+const endDateInput = document.getElementById('end-date') as HTMLInputElement;
+const modalDelete = document.getElementById('delete-modal') as HTMLElement;
+const buttonCancelDelete = document.getElementById(
+  'cancel-delete',
+) as HTMLButtonElement;
+const buttonConfirmDelete = document.getElementById(
+  'confirm-delete',
+) as HTMLButtonElement;
 
 export function setTipoTransacao(tipo: 'entrada' | 'saida') {
   tipoTransacao = tipo;
@@ -94,7 +111,7 @@ function onSubmit(event: Event) {
   }
   renderizarTabela(table, registros);
   atualizarTotal(totalRegistro, valorEntradas, valorSaidas, saldoFinal);
-  closeModal();
+  closeModal(modal);
 }
 
 function init() {
@@ -114,7 +131,9 @@ btnSaida?.addEventListener('click', () => {
   openModal();
 });
 submit?.addEventListener('submit', onSubmit);
-btnFechar?.addEventListener('click', closeModal);
+btnFechar?.addEventListener('click', () => {
+  closeModal(modal);
+});
 registrarEntrada?.addEventListener('click', () => {
   setTipoTransacao('entrada');
   openModal();
@@ -130,52 +149,60 @@ searchInput?.addEventListener('keyup', () => {
   });
   renderizarTabela(table, filtered);
 });
-function applyFilter() {
+function applyFilter(): void {
   const searchValue = searchInput.value.toLowerCase();
-  if (activeFilter === 'todos') {
-    const filtered = registros
-      .filter((registro) => {
-        return registro.descricao.toLowerCase().includes(searchValue);
-      })
-      .filter(() => {
-        return true;
-      });
-    renderizarTabela(table, filtered);
-  } else if (activeFilter === 'entrada') {
-    const filtered = registros
-      .filter((registro) => {
-        return registro.descricao.toLowerCase().includes(searchValue);
-      })
-      .filter((tipo) => {
-        return tipo.tipo === 'entrada';
-      });
-    renderizarTabela(table, filtered);
-  } else {
-    const filtered = registros
-      .filter((registro) => {
-        return registro.descricao.toLowerCase().includes(searchValue);
-      })
-      .filter((tipo) => {
-        return tipo.tipo === 'saida';
-      });
-    renderizarTabela(table, filtered);
-  }
+  const startDate = startDateInput.value
+    ? new Date(startDateInput.value)
+    : null;
+  const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
+
+  const filtered = registros.filter((registro) => {
+    const matchesSearch = registro.descricao
+      .toLowerCase()
+      .includes(searchValue);
+
+    const matchesType =
+      activeFilter === 'todos' || registro.tipo === activeFilter;
+
+    const registroDate = new Date(registro.data);
+    const afterStartDate = !startDate || registroDate >= startDate;
+    const beforeEndDate = !endDate || registroDate <= endDate;
+    const matchesDate = afterStartDate && beforeEndDate;
+    return matchesSearch && matchesType && matchesDate;
+  });
+
+  renderizarTabela(table, filtered);
+  atualizarTotal(totalRegistro, valorEntradas, valorSaidas, saldoFinal);
 }
-filterContainer?.addEventListener('click', (event) => {
-  const botao = <HTMLElement>event.target;
-  btnFilterAll.classList.remove('active');
-  btnFilterEntrada.classList.remove('active');
-  btnFilterSaida.classList.remove('active');
-  if (botao.id === 'filter-all') {
-    activeFilter = 'todos';
-    btnFilterAll.classList.add('active');
-  } else if (botao.id === 'filter-entrada') {
-    activeFilter = 'entrada';
-    btnFilterEntrada.classList.add('active');
-  } else {
-    activeFilter = 'saida';
-    btnFilterSaida.classList.add('active');
+filterContainer.addEventListener('click', (event) => {
+  if (event.target instanceof HTMLButtonElement) {
+    const botao = event.target;
+    btnFilterAll.classList.remove('active');
+    btnFilterEntrada.classList.remove('active');
+    btnFilterSaida.classList.remove('active');
+    if (botao.id === 'filter-all') {
+      activeFilter = 'todos';
+      btnFilterAll.classList.add('active');
+    } else if (botao.id === 'filter-entrada') {
+      activeFilter = 'entrada';
+      btnFilterEntrada.classList.add('active');
+    } else {
+      activeFilter = 'saida';
+      btnFilterSaida.classList.add('active');
+    }
   }
   applyFilter();
+});
+buttonConfirmDelete.addEventListener('click', () => {
+  if (registroIdParaDeletar) {
+    removerRegistroPorId(registroIdParaDeletar);
+    renderizarTabela(table, registros);
+    atualizarTotal(totalRegistro, valorEntradas, valorSaidas, saldoFinal);
+    showNotification('O registro foi excluído com sucesso!', 'success');
+    closeModal(modalDelete);
+  }
+});
+buttonCancelDelete.addEventListener('click', () => {
+  closeModal(modalDelete);
 });
 init();
