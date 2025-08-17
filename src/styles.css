@@ -221,28 +221,71 @@ tbody tr:nth-child(even) {
 
 .notificacao {
     position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #4CAF50;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 500;
     color: white;
-    padding: 15px 25px;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-20px);
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out, visibility 0s 0.5s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 1000;
+    transition: top 0.5s ease-in-out;
+    opacity: 0;
 }
 
 .notificacao.show {
+    top: 20px;
     opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
 }
 
-@media screen and (min-width: 600px and max-width: 768px) {
+.notificacao.success {
+    background-color: #4CAF50;
+}
+
+.notificacao.error {
+    background-color: #F44336; 
+}
+
+.search-container {
+    margin-bottom: 1rem;
+    padding: 0 15px;
+}
+
+#search-input{
+    width: 100%;
+    padding: 15px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.filter-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1rem;
+    padding: 0 15px;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.filter-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* media queries */
+
+@media screen and (min-width: 600px) and (max-width: 768px) {
   header {
     width: 100%;
   }

@@ -1,20 +1,28 @@
-import { registros, removerRegistroPorId } from "./data.js";
-import  formatDate  from "./formatDate.js";
-import { openModal } from "./modal.js";
-import { saldoFinal, setTipoTransacao, totalRegistro, valorEntradas, valorSaidas } from "./script.js";
+import { registros, removerRegistroPorId, type Registro } from './data.js';
+import formatDate from './formatDate.js';
+import { openModal } from './modal.js';
+import {
+  saldoFinal,
+  setTipoTransacao,
+  totalRegistro,
+  valorEntradas,
+  valorSaidas,
+} from './script.js';
 
 let registroIdParaEditar: string | null = null;
 export function setRegistroIdParaEditar(id: string | null) {
-    registroIdParaEditar = id;
+  registroIdParaEditar = id;
 }
 export function getRegistroIdParaEditar() {
   return registroIdParaEditar;
 }
 
-export function atualizarTotal(totalRegistro: HTMLElement | null,
-    valorEntradas: HTMLElement | null,
-    valorSaidas: HTMLElement | null,
-    saldoFinal: HTMLElement | null) {
+export function atualizarTotal(
+  totalRegistro: HTMLElement | null,
+  valorEntradas: HTMLElement | null,
+  valorSaidas: HTMLElement | null,
+  saldoFinal: HTMLElement | null,
+) {
   let totalEntradas = 0;
   let totalSaidas = 0;
   let saldo = 0;
@@ -31,27 +39,47 @@ export function atualizarTotal(totalRegistro: HTMLElement | null,
   saldo = totalEntradas - totalSaidas;
 
   if (totalRegistro) totalRegistro.textContent = registroTotal.toString();
-  if (valorEntradas) valorEntradas.textContent = totalEntradas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  if (valorSaidas) valorSaidas.textContent = totalSaidas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  if (saldoFinal) saldoFinal.textContent = saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  if (valorEntradas)
+    valorEntradas.textContent = totalEntradas.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+  if (valorSaidas)
+    valorSaidas.textContent = totalSaidas.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+  if (saldoFinal)
+    saldoFinal.textContent = saldo.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
 }
 
-export function renderizarTabela(table: HTMLTableElement | null) {
+export function renderizarTabela(
+  table: HTMLTableElement | null,
+  listaDeRegistros: Registro[],
+) {
   if (table) {
     table.innerHTML = '';
     let tabela = '';
-    registros.forEach((registro) => {
+    listaDeRegistros.forEach((registro) => {
       tabela += `
         <tr>
           <td>${registro.id}</td>
           <td>${registro.descricao}</td>
-          <td>${registro.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+          <td>${registro.valor.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+          })}</td>
           <td>${formatDate(registro.data)}</td>
           <td>
             <span class="badge badge-${registro.tipo}">${registro.tipo}</span>
           </td>
           <td>
-            <button class="btn-excluir" data-id="${registro.id}">Excluir</button>
+            <button class="btn-excluir" data-id="${
+              registro.id
+            }">Excluir</button>
             <button class="btn-editar" data-id="${registro.id}">Editar</button>
           </td>
         </tr>
@@ -61,55 +89,67 @@ export function renderizarTabela(table: HTMLTableElement | null) {
   }
 }
 export function editarRegistro() {
-  const table = document.querySelector('table');
-  if(table) {
-    table.addEventListener('click', (event) => {
-      const target = <HTMLElement>event.target;
-      if(target.classList.contains('btn-editar')) {
-        const id = target.getAttribute('data-id');
-        if(id) {
-          setRegistroIdParaEditar(id);
-          const registroEditar = registros.find((registro) => registro.id === id);
-          if(registroEditar) {
-            const descricaoInput = document.querySelector('#descricao') as HTMLInputElement;
-            const valorInput = document.querySelector('#valor') as HTMLInputElement;
-            const dataInput = document.querySelector('#data') as HTMLInputElement;
+  const table = document.querySelector('table');
+  if (table) {
+    table.addEventListener('click', (event) => {
+      const target = <HTMLElement>event.target;
+      if (target.classList.contains('btn-editar')) {
+        const id = target.getAttribute('data-id');
+        if (id) {
+          setRegistroIdParaEditar(id);
+          const registroEditar = registros.find(
+            (registro) => registro.id === id,
+          );
+          if (registroEditar) {
+            const descricaoInput = document.querySelector(
+              '#descricao',
+            ) as HTMLInputElement;
+            const valorInput = document.querySelector(
+              '#valor',
+            ) as HTMLInputElement;
+            const dataInput = document.querySelector(
+              '#data',
+            ) as HTMLInputElement;
 
-            if(descricaoInput && valorInput && dataInput) {
-              descricaoInput.value = registroEditar.descricao;
-              valorInput.value = registroEditar.valor.toString();
-              dataInput.value = registroEditar.data;
+            if (descricaoInput && valorInput && dataInput) {
+              descricaoInput.value = registroEditar.descricao;
+              valorInput.value = registroEditar.valor.toString();
+              dataInput.value = registroEditar.data;
               setTipoTransacao(registroEditar.tipo);
-              openModal();
-            }
-          }
-        }
-      }
-    });
-  }
+              openModal();
+            }
+          }
+        }
+      }
+    });
+  }
 }
 export function removerRegistro() {
   const table = document.querySelector('table');
   table?.addEventListener('click', (event) => {
     const target = <HTMLElement>event.target;
-    if(target.classList.contains('btn-excluir')) {
-      const id = target.getAttribute('data-id')
-      if(id) {
+    if (target.classList.contains('btn-excluir')) {
+      const id = target.getAttribute('data-id');
+      if (id) {
         removerRegistroPorId(id);
-        renderizarTabela(table);
+        renderizarTabela(table, registros);
         atualizarTotal(totalRegistro, valorEntradas, valorSaidas, saldoFinal);
-        showNotification('O registro foi excluído com sucesso!')
+        showNotification('O registro foi excluído com sucesso!', 'success');
       }
     }
-  })
+  });
 }
-function showNotification(mensagem: string) {
+export function showNotification(mensagem: string, type: 'success' | 'error') {
   const element = document.getElementById('notificacao');
-  if(element) {
+  if (element) {
+    element.textContent = '';
+    element.className = 'notificacao';
     element.textContent = mensagem;
+    element.classList.add(type);
     element.classList.add('show');
     setTimeout(() => {
       element.classList.remove('show');
-    }, 3000)
+      element.classList.remove(type);
+    }, 3000);
   }
 }
