@@ -15,6 +15,7 @@ import {
   getRegistroIdParaEditar,
   registroIdParaDeletar,
   showNotification,
+  limparInputs,
 } from './ui.js';
 let activeFilter: 'todos' | 'entrada' | 'saida' = 'todos';
 let tipoTransacao: 'entrada' | 'saida' = 'entrada';
@@ -22,11 +23,14 @@ export const totalRegistro = document.getElementById('total-registros');
 export const valorEntradas = document.getElementById('valor-entradas');
 export const valorSaidas = document.getElementById('valor-saidas');
 export const saldoFinal = document.getElementById('saldo-final');
-const description = document.getElementById('descricao') as HTMLInputElement;
-const value = document.getElementById('valor') as HTMLInputElement;
-const data = document.getElementById('data') as HTMLInputElement;
+export const description = document.getElementById(
+  'descricao',
+) as HTMLInputElement;
+export const value = document.getElementById('valor') as HTMLInputElement;
+export const data = document.getElementById('data') as HTMLInputElement;
 const table = document.getElementById('tabela-registros') as HTMLTableElement;
 const modal = document.getElementById('modal-wrapper') as HTMLElement;
+const modalChildren = document.getElementById('modal') as HTMLElement;
 const submit = document.getElementById('form-registro');
 const btnEntrada = document.getElementById('tipo-entrada') as HTMLInputElement;
 const btnSaida = document.getElementById('tipo-saida') as HTMLInputElement;
@@ -98,6 +102,7 @@ function onSubmit(event: Event) {
     }
     showNotification('Registro editado com sucesso.', 'success');
     setRegistroIdParaEditar(null);
+    limparInputs();
   } else {
     const newObject: Registro = {
       id: Date.now().toString(),
@@ -108,6 +113,7 @@ function onSubmit(event: Event) {
     };
     showNotification('Registro adicionado com sucesso.', 'success');
     addRegister(newObject);
+    limparInputs();
   }
   renderizarTabela(table, registros);
   atualizarTotal(totalRegistro, valorEntradas, valorSaidas, saldoFinal);
@@ -121,7 +127,6 @@ function init() {
   removerRegistro();
   editarRegistro();
 }
-
 btnEntrada?.addEventListener('click', () => {
   setTipoTransacao('entrada');
   openModal();
@@ -133,6 +138,7 @@ btnSaida?.addEventListener('click', () => {
 submit?.addEventListener('submit', onSubmit);
 btnFechar?.addEventListener('click', () => {
   closeModal(modal);
+  limparInputs();
 });
 registrarEntrada?.addEventListener('click', () => {
   setTipoTransacao('entrada');

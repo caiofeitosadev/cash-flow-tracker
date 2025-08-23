@@ -2,11 +2,14 @@ import { registros, removerRegistroPorId, type Registro } from './data.js';
 import formatDate from './formatDate.js';
 import { openModal } from './modal.js';
 import {
+  data,
+  description,
   saldoFinal,
   setTipoTransacao,
   totalRegistro,
   valorEntradas,
   valorSaidas,
+  value,
 } from './script.js';
 
 let registroIdParaEditar: string | null = null;
@@ -90,6 +93,11 @@ export function renderizarTabela(
   }
 }
 export function editarRegistro() {
+  const descricaoInput = document.querySelector(
+    '#descricao',
+  ) as HTMLInputElement;
+  const valorInput = document.querySelector('#valor') as HTMLInputElement;
+  const dataInput = document.querySelector('#data') as HTMLInputElement;
   const table = document.querySelector('table');
   if (table) {
     table.addEventListener('click', (event) => {
@@ -101,24 +109,12 @@ export function editarRegistro() {
           const registroEditar = registros.find(
             (registro) => registro.id === id,
           );
-          if (registroEditar) {
-            const descricaoInput = document.querySelector(
-              '#descricao',
-            ) as HTMLInputElement;
-            const valorInput = document.querySelector(
-              '#valor',
-            ) as HTMLInputElement;
-            const dataInput = document.querySelector(
-              '#data',
-            ) as HTMLInputElement;
-
-            if (descricaoInput && valorInput && dataInput) {
-              descricaoInput.value = registroEditar.descricao;
-              valorInput.value = registroEditar.valor.toString();
-              dataInput.value = registroEditar.data;
-              setTipoTransacao(registroEditar.tipo);
-              openModal();
-            }
+          if (registroEditar && descricaoInput && valorInput && dataInput) {
+            descricaoInput.value = registroEditar.descricao;
+            valorInput.value = registroEditar.valor.toString();
+            dataInput.value = registroEditar.data;
+            setTipoTransacao(registroEditar.tipo);
+            openModal();
           }
         }
       }
@@ -138,6 +134,16 @@ export function removerRegistro() {
       }
     }
   });
+}
+export function limparInputs() {
+  const descricaoInput = document.querySelector(
+    '#descricao',
+  ) as HTMLInputElement;
+  const valorInput = document.querySelector('#valor') as HTMLInputElement;
+  const dataInput = document.querySelector('#data') as HTMLInputElement;
+  descricaoInput.value = '';
+  valorInput.value = '';
+  dataInput.value = '';
 }
 export function showNotification(mensagem: string, type: 'success' | 'error') {
   const element = document.getElementById('notificacao');

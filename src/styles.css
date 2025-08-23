@@ -358,7 +358,6 @@ tbody tr:nth-child(even) {
 }
 
 .filter-container {
-    width: 100%;
     display: flex;
     gap: 8px;
     margin-bottom: 1rem;
