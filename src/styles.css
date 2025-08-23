@@ -56,11 +56,14 @@ main .totalizadores .totalizador h3 {
 
 main .totalizadores .totalizador p {
   font-weight: 700;
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   margin: 0;
 }
 
 main .acoes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 2rem;
   display: flex;
   gap: 12px;
@@ -345,7 +348,6 @@ tbody tr:nth-child(even) {
 
 .search-container {
     margin-bottom: 1rem;
-    padding: 0 15px;
 }
 
 #search-input{
@@ -361,7 +363,6 @@ tbody tr:nth-child(even) {
     display: flex;
     gap: 8px;
     margin-bottom: 1rem;
-    padding: 0 15px;
 }
 
 .filter-btn {
@@ -487,10 +488,6 @@ tbody tr:nth-child(even) {
     gap: 1rem;
   }
   
-  main .acoes {
-    flex-direction: row;
-  }
-  
   .filter-container {
     display: flex;
     flex-direction: column;
@@ -512,6 +509,14 @@ tbody tr:nth-child(even) {
   }
   #modal {
     width: 500px;
+  }
+}
+@media screen and (max-width: 600px) {
+  main .acoes {
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 15px;
   }
 }
 
